@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fight For a New World</title>
+
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.messagestore.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.fallbacks.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.language.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.parser.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.emitter.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.emitter.bidi.js"></script>
+    <script src="antixss.js" type="text/javascript"></script>
+
+
+</head>
+
+<body>
+    <h1>Fight For A New World</h1>
+    <h2>Resources</h2>
+    <ul class="pad-left">
+        <li>Oxygen: <a id="oxy"></a></li>
+        <li>Hydrogen: <a id="hyd"></a></li>
+        <li>Iron: <a id="irn"></a></li>
+        <li>Food: <a id="fud"></a></li>
+        <li>Wood: <a id="wud"></a></li>
+        <li>Energy Crystal: <a id="crys"></a></li>
+    </ul></br>
+    <h2>Buildings</h2>
+    <ul id="buildings" class="pad-left">
+    </ul>
+    <footer class="footer">
+        <div class="container">
+            <span><a href="https://console.bluemix.net/docs/tutorials/index.html" target="_blank">Looking for more tutorials?</a></span>
+        </div>
+    </footer>
+
+</body>
+<script>
+
+    var building_list = [
+        "Command Centre",
+        "Guild Hall",
+        "Resource Buildings",
+        "Barracks",
+        "Radar",
+        "Market",
+        "Storage",
+        "Infirmary",
+        "Tech Centre", // shield, towers, walls, traps
+        "Research Lab",
+        "Resource Bunker",
+        "Settlements"
+    ]
+    function ready() {
+        //alert('DOM is ready');
+    }
+
+    setBuildings = () => {
+        let to_add = "";
+
+        for (let i in building_list) {
+            to_add = to_add + `<li>${building_list[i]}</li>`;
+        }
+
+        document.getElementById("buildings").innerHtml = to_add;
+    }
+
+    setResources = () => {
+        document.getElementById("oxy").innerText = Math.floor(oxy);
+        document.getElementById("hyd").innerText = Math.floor(hyd);
+        document.getElementById("irn").innerText = Math.floor(irn);
+        document.getElementById("fud").innerText = Math.floor(fud);
+        document.getElementById("wud").innerText = Math.floor(wud);
+        document.getElementById("crys").innerText = Math.floor(crys);
+    }
+    var oxy = 500;
+    var hyd = 500;
+    var irn = 500;
+    var fud = 500;
+    var wud = 500;
+    var crys = 500;
+
+    setResources();
+    setBuildings();
+
+    var oxy_speed = 500; // mining speed per hour
+    var hyd_speed = 500; // mining speed per hour
+    var irn_speed = 500; // mining speed per hour
+    var fud_speed = 500; // mining speed per hour
+    var wud_speed = 500; // mining speed per hour
+    var crys_speed = 500; // mining speed per hour
+
+    document.addEventListener("DOMContentLoaded", ready);
+
+    setInterval(() => {
+        oxy = oxy + (oxy_speed / 60 / 60 / 5);
+        hyd = hyd + (hyd_speed / 60 / 60 / 5);
+        irn = irn + (irn_speed / 60 / 60 / 5);
+        fud = fud + (fud_speed / 60 / 60 / 5);
+        wud = wud + (wud_speed / 60 / 60 / 5);
+        crys = crys + (crys_speed / 60 / 60 / 5);
+
+        setResources();
+        setBuildings();
+    }, 200)
+
+</script>
+
+
+</html>
+
+
+<script>
+
+    	//Submit data when enter key is pressed
+        $('#user_name').keydown(function(e) {
+        	var name = $('#user_name').val();
+            if (e.which == 13 && name.length > 0) { //catch Enter key
+            	//POST request to API to create a new visitor entry in the database
+                $.ajax({
+				  method: "POST",
+				  url: "./api/visitors",
+				  contentType: "application/json",
+				  data: JSON.stringify({name: name })
+				})
+                .done(function(data) {
+                    if(data && data.name){
+                        if(data._id)
+                            $('#response').html($.i18n('added_to_database', AntiXSS.sanitizeInput(data.name)));
+                        else
+                            $('#response').html($.i18n('hello', AntiXSS.sanitizeInput(data.name))); 
+                    }
+                    else {
+                        $('#response').html(AntiXSS.sanitizeInput(data));
+                    }
+                    $('#nameInput').hide();
+                    getNames();
+                });
+            }
+        });
+
+        //Retrieve all the visitors from the database
+        function getNames(){
+          $.get("./api/visitors")
+              .done(function(data) {
+                  if(data.length > 0) {
+                    data.forEach(function(element, index) {
+                      data[index] = AntiXSS.sanitizeInput(element)
+                    });
+                    $('#databaseNames').html($.i18n('database_contents') + JSON.stringify(data));
+                  }
+              });
+          }
+
+          //Call getNames on page load.
+          getNames();
+
+
+    </script>
