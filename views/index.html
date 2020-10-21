@@ -74,57 +74,6 @@
     console.log("add builds html" + data);
     document.getElementById('buildings').innerHTML = data;
   })
-
-  var HttpClient = function() {
-      this.get = function(aUrl, aCallback) {
-          var anHttpRequest = new XMLHttpRequest();
-          anHttpRequest.onreadystatechange = function() {
-              if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
-                  aCallback(anHttpRequest.responseText);
-          }
-
-          anHttpRequest.open( "GET", aUrl, true );
-          anHttpRequest.send( null );
-      }
-  }
-  var client = new HttpClient();
-
-  /*function setJs(page) {
-    client.get(`./${page}/${page}.js`, function(response) {
-      document.getElementById('script').innerHTML = response;
-      console.log(response);
-    });
-  }
-
-  function setHtml(page) {
-    client.get(`./${page}/${page}.html`, function(response) {
-      document.getElementById('root').innerHTML = response;
-      //console.log(response);
-    });
-
-    if(page == 'home') {
-      home_init();
-    }
-  }
-
-  function setRoot(page) {
-    client.open('GET', `./${page}/${page}.html`);
-    client.onreadystatechange = function() {
-      document.getElementById('root').innerHTML = client.responseText;
-        console.log(client.responseText);
-    }
-    client.send();
-
-
-    setHtml(page);
-
-    client.get(`./api/${page}`, function(response) {
-      document.getElementById('root').innerHTML = response;
-      console.log(response);
-    });
-  }*/
-
-
   var canvas = document.querySelector('canvas');
 
   var c = canvas.getContext('2d');
@@ -203,48 +152,6 @@
 
   var frameCount = 0;
 
-
-/*  var HttpClient = function() {
-    this.get = function(aUrl, aCallback) {
-        var anHttpRequest = new XMLHttpRequest();
-        anHttpRequest.onreadystatechange = function() {
-            if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
-                aCallback(anHttpRequest.responseText);
-        }
-
-        anHttpRequest.open( "GET", aUrl, true );
-        anHttpRequest.send( null );
-    }
-}
-
-  var client = new HttpClient();
-  //client.get('http://some/thing?with=arguments', function(response) {
-  client.get('./api/start_buildings', function(response) {
-      console.log(response);
-  });*/
-
-  /*  $(document).ready(function(){
-      $.ajaxSetup({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      });
-
-      $.get("./api/start_buildings")
-        .done(function(data) {
-            if(data.length > 0) {
-              building_list = data;
-              setBuildings();
-            }
-        });
-
-
-        $.get("./api/start_res_details")
-          .done(function(data) {
-            setRes(data);
-          });
-    });*/
-
     function animate() {
       frameCount ++;
       if(frameCount % 20 == 0) {
@@ -258,66 +165,16 @@
       }
     }
 
-    //setRoot('home');
 
     setInterval(() => {
       requestAnimationFrame(animate);
-
-      /*if(state == 'home') {
-        home_update();
-      }*/
     }, 200)
 
 </script>
 
-
 </html>
 
-
 <script>
-
-    	//Submit data when enter key is pressed
-        $('#user_name').keydown(function(e) {
-        	var name = $('#user_name').val();
-            if (e.which == 13 && name.length > 0) { //catch Enter key
-            	//POST request to API to create a new visitor entry in the database
-                $.ajax({
-				  method: "POST",
-				  url: "./api/visitors",
-				  contentType: "application/json",
-				  data: JSON.stringify({name: name })
-				})
-                .done(function(data) {
-                    if(data && data.name){
-                        if(data._id)
-                            $('#response').html($.i18n('added_to_database', AntiXSS.sanitizeInput(data.name)));
-                        else
-                            $('#response').html($.i18n('hello', AntiXSS.sanitizeInput(data.name)));
-                    }
-                    else {
-                        $('#response').html(AntiXSS.sanitizeInput(data));
-                    }
-                    $('#nameInput').hide();
-                    getNames();
-                });
-            }
-        });
-
-        //Retrieve all the visitors from the database
-        function getNames(){
-          $.get("./api/visitors")
-              .done(function(data) {
-                  if(data.length > 0) {
-                    data.forEach(function(element, index) {
-                      data[index] = AntiXSS.sanitizeInput(element)
-                    });
-                    $('#databaseNames').html($.i18n('database_contents') + JSON.stringify(data));
-                  }
-              });
-          }
-
-          //Call getNames on page load.
-          getNames();
 
 
     </script>
