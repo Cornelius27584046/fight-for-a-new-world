@@ -31,6 +31,8 @@
     <h1>Fight For A New World</h1>
   </header>
 
+  <canvas id="canvas" width="300" height="300"></canvas>
+
     <div class="content">
       <div class="align-left">
         <h2>Resources</h2>
@@ -57,6 +59,104 @@
 
 </body>
 <script>
+
+  var canvas = document.querySelector('canvas');
+
+  var c = canvas.getContext('2d');
+
+  var stars = [];
+
+  var colors = [
+    '#FFF84E',
+    '#FFB159',
+    '#FF2B1C',
+    '#DCCEFF',
+    '#89F9FF'
+  ]
+
+  capRandom = (temp) => {
+    if(temp <= 0) {
+      if( temp > -0,1) {
+        temp = -0.15;
+      }
+    }else {
+      if( temp < 0,1) {
+        temp = 0.15;
+      }
+    }
+    return temp;
+  }
+
+  function randomStar() {
+    this.radius = Math.max(Math.random() / 2, 0.15);
+    this.x = Math.random() * (innerWidth - this.radius * 2) + this.radius;
+    this.y = Math.random() * (innerHeight - this.radius * 2) + this.radius;
+    let temp = Math.random() - 0.5;
+    this.dx = capRandom(temp) * 5;
+    temp = Math.random() - 0.5;
+    if(temp < -0.3) {
+      this.fstyle = colors[0];
+    }if(temp < -0.1) {
+      this.fstyle = colors[1];
+    }if(temp < 0.1) {
+      this.fstyle = colors[2];
+    }if(temp < 0.3) {
+      this.fstyle = colors[3];
+    }else {
+      this.fstyle = colors[4];
+    }
+    this.dy = capRandom(temp) * 5;
+
+    this.draw = () => {
+      c.beginPath();
+      c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+      c.fillStyle = this.fstyle;
+      c.strokeStyle = 'white';
+      c.fill();
+    }
+
+    this.update = () => {
+      if (this.x + this.radius > canvas.width
+        || this.x - this.radius < 0) {
+          this.dx = -this.dx;
+        }
+      if (this.y + this.radius > canvas.height
+        || this.y - this.radius < 0) {
+          this.dy = -this.dy;
+        }
+
+        this.x += this.dx;
+        this.y += this.dy;
+
+        this.draw();
+    }
+  }
+
+  for(let i = 0; i < innerWidth; i++) {
+    stars.push(new randomStar());
+  }
+
+  var frameCount = 0;
+
+
+  var HttpClient = function() {
+    this.get = function(aUrl, aCallback) {
+        var anHttpRequest = new XMLHttpRequest();
+        anHttpRequest.onreadystatechange = function() {
+            if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+                aCallback(anHttpRequest.responseText);
+        }
+
+        anHttpRequest.open( "GET", aUrl, true );
+        anHttpRequest.send( null );
+    }
+}
+
+  var client = new HttpClient();
+  //client.get('http://some/thing?with=arguments', function(response) {
+  client.get('./api/start_buildings', function(response) {
+      console.log(response);
+  });
 
   var oxy;
   var hyd;
@@ -219,7 +319,21 @@
         });
 
         setResources();
+        requestAnimationFrame(animate);
     }, 200)
+
+    animate = () => {
+      frameCount ++;
+      if(frameCount % 20 == 0) {
+        stars.pop();
+        stars.push(new randomStar());
+      }
+      c.clearRect(0, 0, innerWidth, innerHeight);
+
+      for (let i = 0; i < stars.length; i++) {
+        stars[i].update();
+      }
+    }
 
 </script>
 
