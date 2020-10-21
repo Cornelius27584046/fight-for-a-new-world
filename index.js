@@ -147,25 +147,12 @@ var userStates = [
 ////////////////////////////// EXPRESS CODE ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-// parse application/x-www-form-urlencoded
-//app.use(bodyParser.urlencoded({ extended: false }))
-
-// parse application/json
-//app.use(bodyParser.json())
-
 app.get("/api/user_building_list", function (request, response) {
   response.json(cur_building_list[request]);
 });
 
 app.get("/api/user_resources_list", function (request, response) {
   response.json(userRes[request]);
-});
-
-app.get("/api/home", function (request, response) {
-  response.json(express.static(__dirname + '/views/home/home.html'));
 });
 
 express_update = (fps) => {
@@ -193,14 +180,6 @@ var port = process.env.PORT || 3000
 var server = app.listen(port, function() {
     console.log("To view your app, open this link in your browser: http://localhost:" + port);
 });
-
-/*app.get('/',function(req, res) {
-	res.sendFile(__dirname + '/views/index.html');
-});
-app.use('/views',express.static(__dirname + '/views'));
-
-serv.listen(process.env.PORT || 2000);
-console.log("Server started.");*/
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// SOCKET CODE ///////////////////////////////////
