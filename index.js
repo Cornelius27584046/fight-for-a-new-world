@@ -174,9 +174,12 @@ app.use(express.static(__dirname + '/views'));
 
 
 var port = process.env.PORT || 3000
-var server = app.listen(port, function() {
+/*var server = app.listen(port, function() {
     console.log("To view your app, open this link in your browser: http://localhost:" + port);
-});
+});*/
+const server = express()
+  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
+  .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// SOCKET CODE ///////////////////////////////////
