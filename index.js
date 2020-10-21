@@ -5,6 +5,7 @@ const path = require('path');
 var bodyParser = require('body-parser');
 const FPS = 25;
 var fs = require('fs');
+const INDEX = '/views/index.html';
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// DUMMY DATA /////////////////////////////////////
@@ -178,7 +179,7 @@ var PORT = process.env.PORT || 3000
     console.log("To view your app, open this link in your browser: http://localhost:" + port);
 });*/
 const server = express()
-  .use((req, res) => res.sendFile(INDEX, { root: __dirname + '/views' }))
+  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 ////////////////////////////////////////////////////////////////////////////////
