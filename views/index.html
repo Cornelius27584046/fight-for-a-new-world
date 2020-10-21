@@ -27,7 +27,7 @@
 </head>
 
 <body>
-  <header style="box-shadow: 0 4px 2px -2px darkgray; top: 0; bottom: 0; height: 70px; position: absolute; padding: 0; margin: 0; width: 100%;">
+  <header style="box-shadow: 0 4px 2px -2px darkgray; top: 0; bottom: 0; height: 70px; position: absolute; padding: 0; margin: 0; width: 100%;" onclick="state_set('home')">
     <h1>Fight For A New World</h1>
   </header>
 
@@ -52,28 +52,65 @@
 
 <script>
 
-  var state = 'login';
+  var state = 'home';
+  var res = [];
+
+  var root = document.getElementById('root');
 	var socket = io();
 
   function newPage(data) {
+    //console.log(data);
     socket.emit('state', data);
   }
 
+  function state_set(data) {
+    socket.emit('state', data);
+  }
+
+  function root_finished() {
+  socket.emit('root_done', this.state);
+  }
+
+
+  socket.on('init_state', function(data) {
+    //console.log(data);
+    this.state = 'home';
+    state_set(data);
+  });
+
 
   socket.on('state', function(data) {
-    state = data;
-    socket.emit('state', data);
-  })
+    this.state = data;
+    state_set(data);
+  });
 
   socket.on('root', (data) => {
-    document.getElementById('root').innerHTML = data;
-    socket.emit('root_done', state);
+    root.innerHTML = data;
+    //console.log("state: " + this.state);
+    root_finished();
   })
 
   socket.on('add_buildings', function(data) {
-    console.log("add builds html" + data);
+    //console.log("add builds html" + data);
     document.getElementById('buildings').innerHTML = data;
   })
+
+  socket.on('res_update', function(data, state_data) {
+    if(state_data == 'home' || state_data == 'construction') {
+      try {
+        document.getElementById('oxy').innerText = Math.floor(data['oxy']);
+        document.getElementById('hyd').innerText = Math.floor(data['hyd']);
+        document.getElementById('irn').innerText = Math.floor(data['irn']);
+        document.getElementById('fud').innerText = Math.floor(data['fud']);
+        document.getElementById('wud').innerText = Math.floor(data['wud']);
+        document.getElementById('crys').innerText = Math.floor(data['crys']);
+        res = data;
+      } catch(err) {
+        console.log(err);
+      }
+    }
+  })
+
   var canvas = document.querySelector('canvas');
 
   var c = canvas.getContext('2d');
