@@ -27,7 +27,7 @@
 </head>
 
 <body>
-  <header style="box-shadow: 0 4px 2px -2px gray; top: 0; bottom: 0; height: 70px; position: absolute; padding: 0; margin: 0; width: 100%;">
+  <header style="box-shadow: 0 4px 2px -2px darkgray; top: 0; bottom: 0; height: 70px; position: absolute; padding: 0; margin: 0; width: 100%;">
     <h1>Fight For A New World</h1>
   </header>
 
@@ -58,6 +58,20 @@
 </body>
 <script>
 
+  var oxy;
+  var hyd;
+  var irn;
+  var fud;
+  var wud;
+  var crys;
+
+  var oxy_speed;
+  var hyd_speed;
+  var irn_speed;
+  var fud_speed;
+  var wud_speed;
+  var crys_speed;
+
     var all_buildings = [
         "Command Centre",
         "Guild Hall",
@@ -74,9 +88,8 @@
     ]
 
     var building_list = [
-        "Command Centre",
-        "Resource Buildings",
     ]
+
     var building_link_list = {
         "Command Centre": "commCentre.html",
         "Guild Hall": "guild.html",
@@ -91,6 +104,22 @@
         "Resource Bunker": "bunker.html",
         "Settlements": "settlements.html"
     }
+
+    var building_index_list = {
+        "Command Centre": "0",
+        "Guild Hall": "1",
+        "Resource Buildings": "2",
+        "Barracks": "3",
+        "Radar": "4",
+        "Market": "5",
+        "Storage": "6",
+        "Infirmary": "7",
+        "Tech Centre": "8",
+        "Research Lab": "9",
+        "Resource Bunker": "10",
+        "Settlements": "11"
+    }
+
     var building_color_list = {
         "Command Centre": "blue",
         "Guild Hall": "gold",
@@ -106,8 +135,50 @@
         "Settlements": "yellow"
     }
 
+    $(document).ready(function(){
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+
+      $.get("./api/start_buildings")
+        .done(function(data) {
+            if(data.length > 0) {
+              building_list = data;
+              setBuildings();
+            }
+        });
+
+
+        $.get("./api/start_res_details")
+          .done(function(data) {
+            console.log(data);
+            setRes(data);
+          });
+
+
+    });
+
+    setRes = (data) => {
+      oxy = data["oxy"];
+      hyd = data["hyd"];
+      irn = data["irn"];
+      fud = data["fud"];
+      wud = data["wud"];
+      crys = data["crys"];
+
+      setResources();
+
+      oxy_speed = data["oxy_speed"];
+      hyd_speed = data["hyd_speed"];
+      irn_speed = data["irn_speed"];
+      fud_speed = data["fud_speed"];
+      wud_speed = data["wud_speed"];
+      crys_speed = data["crys_speed"];
+    }
+
     function ready() {
-        //alert('DOM is ready');
     }
 
     setBuildings = () => {
@@ -138,24 +209,8 @@
         document.getElementById("Crystal").style.color = "green";
 
     }
-    var oxy = 500;
-    var hyd = 500;
-    var irn = 500;
-    var fud = 500;
-    var wud = 500;
-    var crys = 500;
 
-    setResources();
-    setBuildings();
-
-    var oxy_speed = 1000; // mining speed per hour
-    var hyd_speed = 1000; // mining speed per hour
-    var irn_speed = 1000; // mining speed per hour
-    var fud_speed = 1000; // mining speed per hour
-    var wud_speed = 1000; // mining speed per hour
-    var crys_speed = 1500; // mining speed per hour
-
-    document.addEventListener("DOMContentLoaded", ready);
+    document.addEventListener("load", ready);
 
     setInterval(() => {
         oxy = oxy + (oxy_speed / 60 / 60 / 5);

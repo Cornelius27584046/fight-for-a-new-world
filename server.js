@@ -17,6 +17,86 @@ var vendor; // Because the MongoDB and Cloudant use different API commands, we
             // vendor.
 var dbName = 'mydb';
 
+var start_building_list = [
+    "Command Centre",
+    "Resource Buildings",
+]
+
+var res_details = {
+  "oxy": 500,
+  "hyd": 500,
+  "irn": 500,
+  "fud": 500,
+  "wud": 500,
+  "crys": 500,
+  "oxy_speed": 1000,
+  "hyd_speed": 1000,
+  "irn_speed": 1000,
+  "fud_speed": 1000,
+  "wud_speed": 1000,
+  "crys_speed": 1500
+}
+
+  var all_buildings = [
+      "Command Centre",
+      "Guild Hall",
+      "Resource Buildings",
+      "Barracks",
+      "Radar",
+      "Market",
+      "Storage",
+      "Infirmary",
+      "Tech Centre", // shield, towers, walls, traps
+      "Research Lab",
+      "Resource Bunker",
+      "Settlements"
+  ]
+
+  var building_link_list = {
+      "Command Centre": "commCentre.html",
+      "Guild Hall": "guild.html",
+      "Resource Buildings": "resbuilds.html",
+      "Barracks": "barracks.html",
+      "Radar": "radar.html",
+      "Market": "market.html",
+      "Storage": "storage.html",
+      "Infirmary": "infirmary.html",
+      "Tech Centre": "tech.html",
+      "Research Lab": "lab.html",
+      "Resource Bunker": "bunker.html",
+      "Settlements": "settlements.html"
+  }
+
+  var building_index_list = {
+      "Command Centre": "0",
+      "Guild Hall": "1",
+      "Resource Buildings": "2",
+      "Barracks": "3",
+      "Radar": "4",
+      "Market": "5",
+      "Storage": "6",
+      "Infirmary": "7",
+      "Tech Centre": "8",
+      "Research Lab": "9",
+      "Resource Bunker": "10",
+      "Settlements": "11"
+  }
+
+  var building_color_list = {
+      "Command Centre": "blue",
+      "Guild Hall": "gold",
+      "Resource Buildings": "lime",
+      "Barracks": "darkred",
+      "Radar": "cyan",
+      "Market": "orangered",
+      "Storage": "silver",
+      "Infirmary": "red",
+      "Tech Centre": "orange",
+      "Research Lab": "green",
+      "Resource Bunker": "darkblue",
+      "Settlements": "yellow"
+  }
+
 // Separate functions are provided for inserting/retrieving content from
 // MongoDB and Cloudant databases. These functions must be prefixed by a
 // value that may be assigned to the 'vendor' variable, such as 'mongodb' or
@@ -112,6 +192,19 @@ app.get("/api/visitors", function (request, response) {
     return;
   }
   getAll[vendor](response);
+});
+
+
+////////////////////////////////////////////////////////////////////////////////
+///////////////////// Start my code ////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+app.get("/api/start_buildings", function (request, response) {
+  response.json(start_building_list);
+});
+
+app.get("/api/start_res_details", function (request, response) {
+  response.json(res_details);
 });
 
 // load local VCAP configuration  and service credentials
