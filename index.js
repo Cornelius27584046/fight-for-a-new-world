@@ -227,8 +227,8 @@ io.sockets.on('connection', function(socket){
       tempBuilds = userBuildings[socket.id];
       //console.log(tempBuilds)
       for (i in tempBuilds) {
-        console.log(i)
-        to_add = to_add + `<li><a id="${i.split(" ")[0]}">${i}</a></br></li>`;
+        //console.log(i)
+        to_add = to_add + `<li><a onclick="newPage('${i.split(" ")[0]}')" id="${i.split(" ")[0]}">${i}</a></br></li>`;
       }
       socket.emit('add_buildings', to_add);
     }

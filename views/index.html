@@ -50,11 +50,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
 
-<script type="module">
+<script>
 
   var state = 'login';
-
 	var socket = io();
+
+  function newPage(data) {
+    socket.emit('state', data);
+  }
+
 
   socket.on('state', function(data) {
     state = data;
