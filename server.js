@@ -4,6 +4,8 @@ var cfenv = require("cfenv");
 var bodyParser = require('body-parser')
 const path = require('path');// Serve the static files from the React app
 
+const FPS = 25;
+
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -18,11 +20,18 @@ var vendor; // Because the MongoDB and Cloudant use different API commands, we
 var dbName = 'mydb';
 
 var start_building_list = [
+      "Command Centre",
+      "Resource Buildings",
+  ]
+
+var cur_building_list = {
+  "user": [
     "Command Centre",
     "Resource Buildings",
-]
+  ]
+}
 
-var res_details = {
+var start_res_details = {
   "oxy": 500,
   "hyd": 500,
   "irn": 500,
@@ -35,6 +44,23 @@ var res_details = {
   "fud_speed": 1000,
   "wud_speed": 1000,
   "crys_speed": 1500
+}
+
+var res_details = {
+  "user": {
+    "oxy": 500,
+    "hyd": 500,
+    "irn": 500,
+    "fud": 500,
+    "wud": 500,
+    "crys": 500,
+    "oxy_speed": 1000,
+    "hyd_speed": 1000,
+    "irn_speed": 1000,
+    "fud_speed": 1000,
+    "wud_speed": 1000,
+    "crys_speed": 1500
+  }
 }
 
   var all_buildings = [
@@ -80,6 +106,21 @@ var res_details = {
       "Research Lab": "9",
       "Resource Bunker": "10",
       "Settlements": "11"
+  }
+
+  var building_price_list = {
+      "Command Centre": [ [0, 0, 0, 0, 0, 0] ],
+      "Guild Hall": [ [500, 500, 500, 500, 500, 500] ],
+      "Resource Buildings": [ [0, 0, 0, 0, 0, 0] ],
+      "Barracks": [ [500, 500, 500, 500, 500, 500] ],
+      "Radar": [ [500, 500, 500, 500, 500, 500] ],
+      "Market": [ [500, 500, 500, 500, 500, 500] ],
+      "Storage": [ [500, 500, 500, 500, 500, 500] ],
+      "Infirmary": [ [500, 500, 500, 500, 500, 500] ],
+      "Tech Centre": [ [500, 500, 500, 500, 500, 500] ],
+      "Research Lab": [ [500, 500, 500, 500, 500, 500] ],
+      "Resource Bunker": [[500, 500, 500, 500, 500, 500] ],
+      "Settlements": [ [500, 500, 500, 500, 500, 500] ]
   }
 
   var building_color_list = {
@@ -196,7 +237,7 @@ app.get("/api/visitors", function (request, response) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-///////////////////// Start my code ////////////////////////////////////////////
+////////////////////////////// Start my code ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 app.get("/api/start_buildings", function (request, response) {
@@ -206,6 +247,29 @@ app.get("/api/start_buildings", function (request, response) {
 app.get("/api/start_res_details", function (request, response) {
   response.json(res_details);
 });
+
+app.get("/api/cur_building_list", function (request, response) {
+  response.json(cur_building_list['user']);
+});
+
+app.get("/api/cur_resources_list", function (request, response) {
+  response.json(res_details['user']);
+});
+
+update = (fps) => {
+  for (let i in res_details) {
+    res_details[i]["oxy"] = res_details[i]["oxy"] + res_details[i]["oxy_speed"] / 60 / 60 / fps;
+    res_details[i]["hyd"] = res_details[i]["hyd"] + res_details[i]["hyd_speed"] / 60 / 60 / fps;
+    res_details[i]["irn"] = res_details[i]["irn"] + res_details[i]["irn_speed"] / 60 / 60 / fps;
+    res_details[i]["fud"] = res_details[i]["fud"] + res_details[i]["fud_speed"] / 60 / 60 / fps;
+    res_details[i]["wud"] = res_details[i]["wud"] + res_details[i]["wud_speed"] / 60 / 60 / fps;
+    res_details[i]["crys"] = res_details[i]["crys"] + res_details[i]["crys_speed"] / 60 / 60 / fps;
+  }
+}
+
+setInterval( () => {
+  update(FPS);
+}, 1000/FPS);
 
 // load local VCAP configuration  and service credentials
 var vcapLocal;

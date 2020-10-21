@@ -213,12 +213,11 @@
     document.addEventListener("load", ready);
 
     setInterval(() => {
-        oxy = oxy + (oxy_speed / 60 / 60 / 5);
-        hyd = hyd + (hyd_speed / 60 / 60 / 5);
-        irn = irn + (irn_speed / 60 / 60 / 5);
-        fud = fud + (fud_speed / 60 / 60 / 5);
-        wud = wud + (wud_speed / 60 / 60 / 5);
-        crys = crys + (crys_speed / 60 / 60 / 5);
+      $.get("./api/cur_resources_list")
+        .done(function(data) {
+          console.log(data);
+          setRes(data);
+        });
 
         setResources();
     }, 200)
