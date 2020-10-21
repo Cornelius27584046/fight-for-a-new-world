@@ -173,7 +173,7 @@ app.use(bodyParser.json())
 app.use(express.static(__dirname + '/views'));
 
 
-var port = process.env.PORT || 3000
+var PORT = process.env.PORT || 3000
 /*var server = app.listen(port, function() {
     console.log("To view your app, open this link in your browser: http://localhost:" + port);
 });*/
