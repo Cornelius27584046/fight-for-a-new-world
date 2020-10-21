@@ -178,7 +178,7 @@ var port = process.env.PORT || 3000
     console.log("To view your app, open this link in your browser: http://localhost:" + port);
 });*/
 const server = express()
-  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
+  .use((req, res) => res.sendFile(INDEX, { root: __dirname + '/views' }))
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 ////////////////////////////////////////////////////////////////////////////////
