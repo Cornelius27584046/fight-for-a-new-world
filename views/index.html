@@ -33,32 +33,93 @@
 
   <canvas id="canvas" width="300" height="300"></canvas>
 
-    <div class="content">
-      <div class="align-left">
-        <h2>Resources</h2>
-        <ul class="pad-left">
-            <li><a id="Oxygen">Oxygen: <a id="oxy"></a></a></li>
-            <li><a id="Hydrogen">Hydrogen: <a id="hyd"></a></a></li>
-            <li><a id="Iron">Iron: <a id="irn"></a></a></li>
-            <li><a id="Food">Food: <a id="fud"></a></a></li>
-            <li><a id="Wood">Wood: <a id="wud"></a></a></li>
-            <li><a id="Crystal">Energy Crystal: <a id="crys"></a></a></li>
-        </ul></br>
-      </div>
-      <div class="align-left">
-        <h2>Buildings</h2>
-        <ul id="buildings" class="pad-left align-left">
-        </ul>
-      </div>
+    <div id="root">
+
     </div>
+
     <footer class="footer">
         <div class="container">
             <span><a style="color: black;">&COPY; Cornelius Frylinck</a></span>
         </div>
     </footer>
 
+    <div id="script"></div>
+
 </body>
-<script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
+
+<script type="module">
+
+  var state = 'login';
+
+	var socket = io();
+
+  socket.on('state', function(data) {
+    state = data;
+    socket.emit('state', data);
+  })
+
+  socket.on('root', (data) => {
+    document.getElementById('root').innerHTML = data;
+    socket.emit('root_done', state);
+  })
+
+  socket.on('add_buildings', function(data) {
+    console.log("add builds html" + data);
+    document.getElementById('buildings').innerHTML = data;
+  })
+
+  var HttpClient = function() {
+      this.get = function(aUrl, aCallback) {
+          var anHttpRequest = new XMLHttpRequest();
+          anHttpRequest.onreadystatechange = function() {
+              if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+                  aCallback(anHttpRequest.responseText);
+          }
+
+          anHttpRequest.open( "GET", aUrl, true );
+          anHttpRequest.send( null );
+      }
+  }
+  var client = new HttpClient();
+
+  /*function setJs(page) {
+    client.get(`./${page}/${page}.js`, function(response) {
+      document.getElementById('script').innerHTML = response;
+      console.log(response);
+    });
+  }
+
+  function setHtml(page) {
+    client.get(`./${page}/${page}.html`, function(response) {
+      document.getElementById('root').innerHTML = response;
+      //console.log(response);
+    });
+
+    if(page == 'home') {
+      home_init();
+    }
+  }
+
+  function setRoot(page) {
+    client.open('GET', `./${page}/${page}.html`);
+    client.onreadystatechange = function() {
+      document.getElementById('root').innerHTML = client.responseText;
+        console.log(client.responseText);
+    }
+    client.send();
+
+
+    setHtml(page);
+
+    client.get(`./api/${page}`, function(response) {
+      document.getElementById('root').innerHTML = response;
+      console.log(response);
+    });
+  }*/
+
 
   var canvas = document.querySelector('canvas');
 
@@ -74,7 +135,7 @@
     '#89F9FF'
   ]
 
-  capRandom = (temp) => {
+  function capRandom(temp) {
     if(temp <= 0) {
       if( temp > -0,1) {
         temp = -0.15;
@@ -92,7 +153,7 @@
     this.x = Math.random() * (innerWidth - this.radius * 2) + this.radius;
     this.y = Math.random() * (innerHeight - this.radius * 2) + this.radius;
     let temp = Math.random() - 0.5;
-    this.dx = capRandom(temp) * 5;
+    this.dx = capRandom(temp) * 3;
     temp = Math.random() - 0.5;
     if(temp < -0.3) {
       this.fstyle = colors[0];
@@ -105,7 +166,7 @@
     }else {
       this.fstyle = colors[4];
     }
-    this.dy = capRandom(temp) * 5;
+    this.dy = capRandom(temp) * 3;
 
     this.draw = () => {
       c.beginPath();
@@ -120,7 +181,7 @@
         || this.x - this.radius < 0) {
           this.dx = -this.dx;
         }
-      if (this.y + this.radius > canvas.height
+      if (this.y + this.radius > canvas.height - 60
         || this.y - this.radius < 0) {
           this.dy = -this.dy;
         }
@@ -139,7 +200,7 @@
   var frameCount = 0;
 
 
-  var HttpClient = function() {
+/*  var HttpClient = function() {
     this.get = function(aUrl, aCallback) {
         var anHttpRequest = new XMLHttpRequest();
         anHttpRequest.onreadystatechange = function() {
@@ -156,86 +217,9 @@
   //client.get('http://some/thing?with=arguments', function(response) {
   client.get('./api/start_buildings', function(response) {
       console.log(response);
-  });
+  });*/
 
-  var oxy;
-  var hyd;
-  var irn;
-  var fud;
-  var wud;
-  var crys;
-
-  var oxy_speed;
-  var hyd_speed;
-  var irn_speed;
-  var fud_speed;
-  var wud_speed;
-  var crys_speed;
-
-    var all_buildings = [
-        "Command Centre",
-        "Guild Hall",
-        "Resource Buildings",
-        "Barracks",
-        "Radar",
-        "Market",
-        "Storage",
-        "Infirmary",
-        "Tech Centre", // shield, towers, walls, traps
-        "Research Lab",
-        "Resource Bunker",
-        "Settlements"
-    ]
-
-    var building_list = [
-    ]
-
-    var building_link_list = {
-        "Command Centre": "commCentre.html",
-        "Guild Hall": "guild.html",
-        "Resource Buildings": "resbuilds.html",
-        "Barracks": "barracks.html",
-        "Radar": "radar.html",
-        "Market": "market.html",
-        "Storage": "storage.html",
-        "Infirmary": "infirmary.html",
-        "Tech Centre": "tech.html",
-        "Research Lab": "lab.html",
-        "Resource Bunker": "bunker.html",
-        "Settlements": "settlements.html"
-    }
-
-    var building_index_list = {
-        "Command Centre": "0",
-        "Guild Hall": "1",
-        "Resource Buildings": "2",
-        "Barracks": "3",
-        "Radar": "4",
-        "Market": "5",
-        "Storage": "6",
-        "Infirmary": "7",
-        "Tech Centre": "8",
-        "Research Lab": "9",
-        "Resource Bunker": "10",
-        "Settlements": "11"
-    }
-
-    var building_color_list = {
-        "Command Centre": "blue",
-        "Guild Hall": "gold",
-        "Resource Buildings": "lime",
-        "Barracks": "darkred",
-        "Radar": "cyan",
-        "Market": "orangered",
-        "Storage": "silver",
-        "Infirmary": "red",
-        "Tech Centre": "orange",
-        "Research Lab": "green",
-        "Resource Bunker": "darkblue",
-        "Settlements": "yellow"
-    }
-
-    $(document).ready(function(){
+  /*  $(document).ready(function(){
       $.ajaxSetup({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -255,74 +239,9 @@
           .done(function(data) {
             setRes(data);
           });
+    });*/
 
-
-    });
-
-    setRes = (data) => {
-      oxy = data["oxy"];
-      hyd = data["hyd"];
-      irn = data["irn"];
-      fud = data["fud"];
-      wud = data["wud"];
-      crys = data["crys"];
-
-      setResources();
-
-      oxy_speed = data["oxy_speed"];
-      hyd_speed = data["hyd_speed"];
-      irn_speed = data["irn_speed"];
-      fud_speed = data["fud_speed"];
-      wud_speed = data["wud_speed"];
-      crys_speed = data["crys_speed"];
-    }
-
-    function ready() {
-    }
-
-    setBuildings = () => {
-        let to_add = "";
-
-        for (let i in building_list) {
-            to_add = to_add + `<li><a style="color: ${building_color_list[building_list[i]]}" href="./${building_link_list[building_list[i]]}">${building_list[i]}</a></br></li>`;
-            //console.log(to_add);
-        }
-
-        let builds = document.getElementById("buildings");
-        builds.innerHTML = to_add;
-    }
-
-    setResources = () => {
-        document.getElementById("oxy").innerText = Math.floor(oxy);
-        document.getElementById("hyd").innerText = Math.floor(hyd);
-        document.getElementById("irn").innerText = Math.floor(irn);
-        document.getElementById("fud").innerText = Math.floor(fud);
-        document.getElementById("wud").innerText = Math.floor(wud);
-        document.getElementById("crys").innerText = Math.floor(crys);
-
-        document.getElementById("Oxygen").style.color = "aqua";
-        document.getElementById("Hydrogen").style.color = "blue";
-        document.getElementById("Iron").style.color = "orangered";
-        document.getElementById("Food").style.color = "red";
-        document.getElementById("Wood").style.color = "brown";
-        document.getElementById("Crystal").style.color = "green";
-
-    }
-
-    document.addEventListener("load", ready);
-
-    setInterval(() => {
-      $.get("./api/cur_resources_list")
-        .done(function(data) {
-          //console.log(data);
-          setRes(data);
-        });
-
-        setResources();
-        requestAnimationFrame(animate);
-    }, 200)
-
-    animate = () => {
+    function animate() {
       frameCount ++;
       if(frameCount % 20 == 0) {
         stars.pop();
@@ -334,6 +253,16 @@
         stars[i].update();
       }
     }
+
+    //setRoot('home');
+
+    setInterval(() => {
+      requestAnimationFrame(animate);
+
+      /*if(state == 'home') {
+        home_update();
+      }*/
+    }, 200)
 
 </script>
 

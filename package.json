@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -17,12 +17,20 @@
   },
   "dependencies": {
     "@cloudant/cloudant": "^3.0.2",
+    "apollo-server": "^2.18.2",
     "body-parser": "^1.17.x",
-    "cfenv": "^1.0.x",
+    "cfenv": "^1.2.3",
     "dotenv": "^4.0.0",
     "express": "^4.15.x",
-    "mongodb": "^3.1.13"
+    "graphql": "^15.3.0",
+    "mongodb": "^3.1.13",
+    "mongojs": "^3.1.0",
+    "mongoose": "^5.10.9",
+    "socket.io": "^2.3.0"
   },
   "author": "IBM Corp",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
 }

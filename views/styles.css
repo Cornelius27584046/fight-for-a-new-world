@@ -25,9 +25,8 @@ canvas {
   background-color: black;
   top: 0;
   left: 0;
-  bottom: 60px;
   width: 100%;
-  height: auto;
+  height: calc(100% - 60px);
   z-index: -10;
   position: fixed;
 }
@@ -62,4 +61,60 @@ li {
 header {
   align-items: left;
   text-align: left;
+}
+
+#Oxygen {
+  color: aqua;
+}
+#Hydrogen {
+  color: blue;
+}
+#Iron {
+  color: orangered;
+}
+#Food {
+  color: red;
+}
+#Wood {
+  color: brown;
+}
+#Crystal {
+  color: green;
+}
+
+#Command {
+  color: lime;
+}
+#Guild {
+  color: gold;
+}
+#Resource {
+  color: aqua;
+}
+#Barracks {
+  color: darkred;
+}
+#Radar {
+  color: cyan;
+}
+#Market {
+  color: orangered;
+}
+#Storage {
+  color: silver;
+}
+#Infirmary {
+  color: red;
+}
+#Tech {
+  color: orange;
+}
+#Research {
+  color: green;
+}
+#Bunker {
+  color: darkblue;
+}
+#Settlements {
+  color: yellow;
 }

@@ -1,11 +1,12 @@
 var express = require("express");
 var app = express();
 var cfenv = require("cfenv");
-var bodyParser = require('body-parser')
 const path = require('path');// Serve the static files from the React app
 
 const FPS = 25;
 
+
+var SOCKET_LIST = {};
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -19,10 +20,12 @@ var vendor; // Because the MongoDB and Cloudant use different API commands, we
             // vendor.
 var dbName = 'mydb';
 
-var start_building_list = [
+var start_building_list = {
+  "buildings": [
       "Command Centre",
       "Resource Buildings",
   ]
+}
 
 var cur_building_list = {
   "user": [
@@ -254,6 +257,10 @@ app.get("/api/cur_building_list", function (request, response) {
 
 app.get("/api/cur_resources_list", function (request, response) {
   response.json(res_details['user']);
+});
+
+app.get("/api/home", function (request, response) {
+  response.json(express.static(__dirname + '/views/home/home.html'));
 });
 
 update = (fps) => {
