@@ -6,6 +6,8 @@ body {
   margin-bottom: 60px;
   align-items: center;
   text-align: center;
+  background-color: #0F0F0F;
+  color: #f5f7fa;
 }
 .footer {
   position: absolute;
@@ -35,9 +37,15 @@ li {
 }
 
 .content {
+  margin-top: 80px !important;
   padding-left: 50px;
 }
 
 .align-left {
+  text-align: left;
+}
+
+header {
+  align-items: left;
   text-align: left;
 }

@@ -27,17 +27,20 @@
 </head>
 
 <body>
+  <header style="box-shadow: 0 4px 2px -2px gray; top: 0; bottom: 0; height: 70px; position: absolute; padding: 0; margin: 0; width: 100%;">
     <h1>Fight For A New World</h1>
+  </header>
+
     <div class="content">
       <div class="align-left">
         <h2>Resources</h2>
         <ul class="pad-left">
-            <li><a>Oxygen: <a id="oxy"></a></a></li>
-            <li><a>Hydrogen: <a id="hyd"></a></a></li>
-            <li><a>Iron: <a id="irn"></a></a></li>
-            <li><a>Food: <a id="fud"></a></a></li>
-            <li><a>Wood: <a id="wud"></a></a></li>
-            <li><a>Energy Crystal: <a id="crys"></a></a></li>
+            <li><a id="Oxygen">Oxygen: <a id="oxy"></a></a></li>
+            <li><a id="Hydrogen">Hydrogen: <a id="hyd"></a></a></li>
+            <li><a id="Iron">Iron: <a id="irn"></a></a></li>
+            <li><a id="Food">Food: <a id="fud"></a></a></li>
+            <li><a id="Wood">Wood: <a id="wud"></a></a></li>
+            <li><a id="Crystal">Energy Crystal: <a id="crys"></a></a></li>
         </ul></br>
       </div>
       <div class="align-left">
@@ -48,14 +51,14 @@
     </div>
     <footer class="footer">
         <div class="container">
-            <span><a href="https://console.bluemix.net/docs/tutorials/index.html" target="_blank">Looking for more tutorials?</a></span>
+            <span><a style="color: black;">&COPY; Cornelius Frylinck</a></span>
         </div>
     </footer>
 
 </body>
 <script>
 
-    var building_list = [
+    var all_buildings = [
         "Command Centre",
         "Guild Hall",
         "Resource Buildings",
@@ -69,19 +72,38 @@
         "Resource Bunker",
         "Settlements"
     ]
+
+    var building_list = [
+        "Command Centre",
+        "Resource Buildings",
+    ]
     var building_link_list = {
-        "Command Centre": "",
-        "Guild Hall": "",
+        "Command Centre": "commCentre.html",
+        "Guild Hall": "guild.html",
         "Resource Buildings": "resbuilds.html",
-        "Barracks": "",
-        "Radar": "",
-        "Market": "",
-        "Storage": "",
-        "Infirmary": "",
-        "Tech Centre": "", // shield, towers, walls, traps
-        "Research Lab": "",
-        "Resource Bunker": "",
-        "Settlements": ""
+        "Barracks": "barracks.html",
+        "Radar": "radar.html",
+        "Market": "market.html",
+        "Storage": "storage.html",
+        "Infirmary": "infirmary.html",
+        "Tech Centre": "tech.html",
+        "Research Lab": "lab.html",
+        "Resource Bunker": "bunker.html",
+        "Settlements": "settlements.html"
+    }
+    var building_color_list = {
+        "Command Centre": "blue",
+        "Guild Hall": "gold",
+        "Resource Buildings": "lime",
+        "Barracks": "darkred",
+        "Radar": "cyan",
+        "Market": "orangered",
+        "Storage": "silver",
+        "Infirmary": "red",
+        "Tech Centre": "orange",
+        "Research Lab": "green",
+        "Resource Bunker": "darkblue",
+        "Settlements": "yellow"
     }
 
     function ready() {
@@ -92,7 +114,7 @@
         let to_add = "";
 
         for (let i in building_list) {
-            to_add = to_add + `<li><a href="./${building_link_list[building_list[i]]}">${building_list[i]}</a></br></li>`;
+            to_add = to_add + `<li><a style="color: ${building_color_list[building_list[i]]}" href="./${building_link_list[building_list[i]]}">${building_list[i]}</a></br></li>`;
             //console.log(to_add);
         }
 
@@ -107,6 +129,14 @@
         document.getElementById("fud").innerText = Math.floor(fud);
         document.getElementById("wud").innerText = Math.floor(wud);
         document.getElementById("crys").innerText = Math.floor(crys);
+
+        document.getElementById("Oxygen").style.color = "aqua";
+        document.getElementById("Hydrogen").style.color = "blue";
+        document.getElementById("Iron").style.color = "orangered";
+        document.getElementById("Food").style.color = "red";
+        document.getElementById("Wood").style.color = "brown";
+        document.getElementById("Crystal").style.color = "green";
+
     }
     var oxy = 500;
     var hyd = 500;
@@ -136,7 +166,6 @@
         crys = crys + (crys_speed / 60 / 60 / 5);
 
         setResources();
-        setBuildings();
     }, 200)
 
 </script>
