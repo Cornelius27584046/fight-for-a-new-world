@@ -22,11 +22,10 @@ function createNewUser(id) {
   new_user_details(id);
   new_buildings(id);
   new_resources(id);
-  setUserState(id, 'home')
 }
 
 function setUserState(id, state) {
-  userStates[id] = state;
+  { id: state }
 }
 
 function new_user_details(id) {
@@ -42,7 +41,8 @@ function new_buildings(id) {
 }
 
 function new_resources(id) {
-  userRes[id] = {
+  userRes.push({
+    id: {
       "oxy": 500,
       "hyd": 500,
       "irn": 500,
@@ -55,7 +55,8 @@ function new_resources(id) {
       "fud_speed": 1000,
       "wud_speed": 1000,
       "crys_speed": 1500
-  }
+    }
+  })
 }
 
 var users = [
@@ -69,7 +70,8 @@ var userBuildings = {
   }
 }
 
-var userRes = {
+var userRes = [
+  {
     "user": {
       "oxy": 500,
       "hyd": 500,
@@ -85,6 +87,7 @@ var userRes = {
       "crys_speed": 1500
     }
   }
+]
 
 var allBuildings = [
   {
@@ -137,9 +140,9 @@ var allBuildings = [
   }
 ]
 
-var userStates = {
-   'user': 'home'
-}
+var userStates = [
+  { 'user': 'home'}
+]
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// EXPRESS CODE ///////////////////////////////////
@@ -193,7 +196,7 @@ io.sockets.on('connection', function(socket){
   socket.id = Math.random();
   SOCKET_LIST[socket.id] = socket;
   createNewUser(socket.id);
-  socket.emit('init_state', 'home');
+  socket.emit('state', 'home');
 
   socket.on('disconnect',function(){
 		delete SOCKET_LIST[socket.id];
@@ -201,8 +204,7 @@ io.sockets.on('connection', function(socket){
 	});
 
   socket.on('root_done', function(data) {
-    console.log(data);
-    if(userStates[socket.id] == 'home') {
+    if(data == 'home') {
       let to_add = "";
       let tempBuilds = [];
       tempBuilds = userBuildings[socket.id];
@@ -212,17 +214,6 @@ io.sockets.on('connection', function(socket){
         to_add = to_add + `<li><a onclick="newPage('${i.split(" ")[0]}')" id="${i.split(" ")[0]}">${i}</a></br></li>`;
       }
       socket.emit('add_buildings', to_add);
-    }else if(userStates[socket.id] == 'construction') {
-      let to_add = "";
-      let tempBuilds = [];
-      tempBuilds = userBuildings[socket.id];
-      console.log(tempBuilds)
-      console.log(allBuildings['names']);
-      /*for (i in tempBuilds) {
-        //console.log(i)
-        to_add = to_add + `<li><a onclick="newPage('${i.split(" ")[0]}')" id="${i.split(" ")[0]}">${i}</a></br></li>`;
-      }
-      socket.emit('add_buildings', to_add);*/
     }
   })
 
@@ -267,114 +258,8 @@ io.sockets.on('connection', function(socket){
         console.log('OK: ' + filename);
         socket.emit('root', data);
       });
-    }else if(data == 'Command') {
-      filename = __dirname + '\\views\\commCentre.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else if(data == 'Resource') {
-      filename = __dirname + '\\views\\resbuilds.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else if(data == 'Guild') {
-      filename = __dirname + '\\views\\guild.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else if(data == 'Barracks') {
-      filename = __dirname + '\\views\\barracks.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else if(data == 'Radar') {
-      filename = __dirname + '\\views\\radar.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else if(data == 'Market') {
-      filename = __dirname + '\\views\\market.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else if(data == 'Storage') {
-      filename = __dirname + '\\views\\storage.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else if(data == 'Infirmary') {
-      filename = __dirname + '\\views\\infirmary.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else if(data == 'Tech') {
-      filename = __dirname + '\\views\\tech.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else if(data == 'Research') {
-      filename = __dirname + '\\views\\lab.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else if(data == 'Bunker') {
-      filename = __dirname + '\\views\\bunker.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else if(data == 'Settlements') {
-      filename = __dirname + '\\views\\settlements.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else if(data == 'strategy') {
-      filename = __dirname + '\\views\\strategy.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else if(data == 'construction') {
-      filename = __dirname + '\\views\\construction.html';
-      fs.readFile(filename, 'utf8', function(err, data) {
-      if (err) throw err;
-        console.log('OK: ' + filename);
-        socket.emit('root', data);
-      });
-    }else {
-      console.log(data)
     }
   })
-
-
-  setInterval( () => {
-    socket.emit('res_update', userRes[socket.id], userStates[socket.id]);
-
-  }, 1000/FPS);
 
 });
 
